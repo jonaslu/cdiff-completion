@@ -3,14 +3,14 @@
 
 __cdiff()
 {
-    local cur  # Pointer to current completion word.
+    local cur prev words cword
+    _init_completion || return
 
+    # COMPREPLY=()   # Array variable storing the possible completions.
+    # cur=${COMP_WORDS[COMP_CWORD]}
+    # prev=${COMP_WORDS[COMP_CWORD-1]}
 
-    COMPREPLY=()   # Array variable storing the possible completions.
-    cur=${COMP_WORDS[COMP_CWORD]}
-    prev=${COMP_WORDS[COMP_CWORD-1]}
-
-     case "$prev" in
+    case "$prev" in
         --color=)
             compgen -o nospace
             COMPREPLY=( $( compgen -W 'auto always' -- $cur ) )
