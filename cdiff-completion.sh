@@ -6,25 +6,31 @@ __cdiff()
     local cur prev words cword
     _init_completion || return
 
-    # COMPREPLY=()   # Array variable storing the possible completions.
-    # cur=${COMP_WORDS[COMP_CWORD]}
-    # prev=${COMP_WORDS[COMP_CWORD-1]}
+    # echo -e "\n cur: ${cur} prev: ${prev} words: ${words} cword: ${cword}"
 
-    case "$prev" in
-        --color=)
-            compgen -o nospace
-            COMPREPLY=( $( compgen -W 'auto always' -- $cur ) )
-            return 0
-            ;;
-    esac
+    if [[ ${cur}=="=*" ]] ; then
+        case "$prev" in
+            --color)
+                echo "Getting here"
+                COMPREPLY=( $( compgen -W 'auto always' ) )
+                return 0
+                ;;
+        esac
+    fi
     case "$cur" in
+        --c*)
+            compopt -o nospace
+            COMPREPLY=( '--color=' );;
+        --w*)
+            compopt -o nospace
+            COMPREPLY=( '--width=' );;
         -*)
             COMPREPLY=( $( compgen -W '-h -s -w -l -c --version --help --side-by-side \
                 --width= --log --color=' -- $cur ) );;
-        --) COMPREPLY=( $( compgen -W '--version --help --side-by-side \
+        --*)
+            COMPREPLY=( $( compgen -W '--version --help --side-by-side \
                 --width= --log --color=' -- $cur ) );;
-        # yy)
-        # zz)
+        # *) Add git log completion
         esac
 
     return 0
