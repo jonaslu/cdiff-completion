@@ -6,18 +6,21 @@ __cdiff()
     local cur prev words cword
     _init_completion || return
 
+    _get_comp_words_by_ref -n "=" cur prev
+
     # echo -e "\n cur: ${cur} prev: ${prev} words: ${words} cword: ${cword}"
 
-    if [[ ${cur}=="=*" ]] ; then
-        case "$prev" in
-            --color)
-                echo "Getting here"
-                COMPREPLY=( $( compgen -W 'auto always' ) )
-                return 0
-                ;;
-        esac
-    fi
+    # case "$prev" in
+    #     --color=*)
+    #         echo "Getting here"
+    #         COMPREPLY=( $( compgen -W 'auto always' ) )
+    #         return 0
+    #         ;;
+    # esac
+
     case "$cur" in
+        --color=*)
+            COMPREPLY=( $(compgen -W 'auto always' -- ${cur#*=} ));;
         --c*)
             compopt -o nospace
             COMPREPLY=( '--color=' );;
