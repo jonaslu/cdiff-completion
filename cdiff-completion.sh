@@ -27,18 +27,13 @@ __cdiff()
     case "$cur" in
         --color=*)
             COMPREPLY=( $(compgen -W 'auto always' -- ${cur#*=} ));;
-        --c*)
-            compopt -o nospace
-            COMPREPLY=( '--color=' );;
-        --w*)
-            compopt -o nospace
-            COMPREPLY=( '--width=' );;
+        --width=*)
+            return 0;;
         -*)
-            COMPREPLY=( $( compgen -W '-h -s -w -l -c --version --help --side-by-side \
-                --width= --log --color=' -- $cur ) );;
-        --*)
-            COMPREPLY=( $( compgen -W '--version --help --side-by-side \
-                --width= --log --color=' -- $cur ) );;
+            COMPREPLY=( $( compgen -W '-h -s -w -l -c --version \
+                --help --side-by-side \
+                --width= --log --color=' -- $cur ) )
+            [[ $COMPREPLY = *= ]] && compopt -o nospace;;
         *) _git_diff
         esac
 
