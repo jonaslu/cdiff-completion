@@ -1,16 +1,19 @@
 #! /bin/bash
 # cdiff parameter-completion
 
-. /usr/share/bash-completion/completions/git
+# . /usr/share/bash-completion/completions/git
 
-containsElement () {
+__init() {
+    _completion_loader git
+}
+
+__containsElement () {
   local e
   for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
   return 1
 }
 
-__cdiff()
-{
+__cdiff() {
     local cur prev words cword
     _init_completion || return
 
@@ -19,7 +22,7 @@ __cdiff()
     # echo -e "\n cur: ${cur} prev: ${prev} words: ${words[@]} cword: ${cword[@]}"
     # echo "${COMP_WORDS[@]}"
 
-    if containsElement "-l" "${COMP_WORDS[@]}" || containsElement "--log" "${COMP_WORDS[@]}"; then
+    if __containsElement "-l" "${COMP_WORDS[@]}" || __containsElement "--log" "${COMP_WORDS[@]}"; then
         _git_log
         return 0
     fi
@@ -39,5 +42,7 @@ __cdiff()
 
     return 0
 }
+
+__init
 
 complete -F __cdiff cdiff
