@@ -1,8 +1,6 @@
 #! /bin/bash
 # cdiff parameter-completion
 
-# . /usr/share/bash-completion/completions/git
-
 __init() {
     _completion_loader git
 }
@@ -19,9 +17,6 @@ __cdiff() {
 
     _get_comp_words_by_ref -n "=" cur prev
 
-    # echo -e "\n cur: ${cur} prev: ${prev} words: ${words[@]} cword: ${cword[@]}"
-    # echo "${COMP_WORDS[@]}"
-
     if __containsElement "-l" "${COMP_WORDS[@]}" || __containsElement "--log" "${COMP_WORDS[@]}"; then
         _git_log
         return 0
@@ -33,9 +28,11 @@ __cdiff() {
         --width=*)
             return 0;;
         -*)
-            COMPREPLY=( $( compgen -W '-h -s -w -l -c --version \
+            LOCAL_COMPLREPLY=( $( compgen -W '-h -s -w -l -c --version \
                 --help --side-by-side \
                 --width= --log --color=' -- $cur ) )
+            _git_diff
+            COMPREPLY=("${LOCAL_COMPLREPLY[@]}" "${COMPREPLY[@]}")
             [[ $COMPREPLY = *= ]] && compopt -o nospace;;
         *) _git_diff
         esac
